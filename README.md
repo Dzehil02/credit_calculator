@@ -1,30 +1,13 @@
-# React + TypeScript + Vite
+# Кредитный калькулятор
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Расчёт по ежемесячному аннуитетному платежу**
 
-Currently, two official plugins are available:
+*При аннуитетной схеме погашения первая часть платежа — это основной долг, а вторая часть — начисленные проценты. Первая часть остаётся неизменной, а вторая начисляется на остаток тела кредита и убывает с каждым месяцем. Ближе к концу срока погашения доля процентной ставки снижается. Именно при аннуитетной схеме наиболее эффективным оказывается частичное досрочное погашение.* 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Стек:
+- React 
+- TypeScript 
+- Vite
+- React-virtualized
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+#### Для старта приложения используйте команду `npm run dev`
