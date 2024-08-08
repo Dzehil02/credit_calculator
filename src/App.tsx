@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import './App.css'
-import InputBox from './components/InputBox'
 import { CreditInputData, CreditOutputData } from './types/types'
+import { calculateMonthlyPayment, calculateTotalPayment } from './utils/calculatePayment'
+import Table from './components/Table'
+import Header from './components/Header'
+import { validateInputData } from './utils/validateInputData'
 
 function App() {
 
@@ -13,7 +16,12 @@ function App() {
 
   const [outputData, setOutputData] = useState<CreditOutputData[]>([])
 
+  const [validate, setValidate] = useState<string | undefined>(undefined)
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValidate(validateInputData(event))
+
+
     setInputData({
       ...inputData,
       [event.target.name]: +event.target.value
@@ -21,72 +29,19 @@ function App() {
   }
 
   const handleCalculate = () => {
-    const results = [];
-  
-    let S = inputData.amount;
-    const P = inputData.rate / 100 / 12;
-    const monthlyPayment = Math.ceil(S * (P + P / ((1 + P) ** inputData.months - 1)))
-  
-    for (let i = 0; i < inputData.months; i++) {
-      const monthlyInterest = Math.ceil(S * P);
-      const monthlyDebt = monthlyPayment - monthlyInterest;
-  
-      results.push({
-        month: i + 1,
-        debt: monthlyDebt,
-        payment: monthlyPayment,
-        interest: monthlyInterest,
-        remaining: S
-      });
-
-      S -= monthlyDebt;
-      
-    }
-    const lastMonthDebt = results[results.length - 1].debt;
-    const lastMonthRemain = results[results.length - 1].remaining;
-
-    if (lastMonthRemain - lastMonthDebt > 0) {
-      const lastMonthPayment = monthlyPayment + lastMonthRemain - lastMonthDebt
-      results[results.length - 1].debt = lastMonthRemain
-      results[results.length - 1].payment = lastMonthPayment
-    }
+    const results = calculateMonthlyPayment(inputData);
     setOutputData(results);
   };
+
+  const totalPayment = calculateTotalPayment(outputData);
 
   return (
     <>
       <h1>Кредитный калькулятор</h1>
-      <div className="header">
-        <InputBox inputName="amount" changeInput={handleChange} label="Сумма" placeholder="Сумма кредита"/>
-        <InputBox inputName="months" changeInput={handleChange} label="Срок (в месяцах)" placeholder="Срок кредита"/>
-        <InputBox inputName="rate" changeInput={handleChange} label="Процентная ставка" placeholder="Процентная ставка"/>
-        <button onClick={handleCalculate}>Расчёт</button>
-      </div>
-
-      <div className="output">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Месяц</th>
-              <th>Остаток</th>
-              <th>Платеж</th>
-              <th>Долговая часть</th>
-              <th>Процентная часть</th>
-            </tr>
-          </thead>
-          <tbody>
-            {outputData.map((data) => (
-              <tr key={data.month}>
-                <td>{data.month}</td>
-                <td>{data.remaining}</td>
-                <td>{data.payment}</td>
-                <td>{data.debt}</td>
-                <td>{data.interest}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Header validate={validate} handleChange={handleChange} handleCalculate={handleCalculate}/>
+      {validate && <div className="validate">{validate}</div>}
+      {outputData.length > 0 && <div className="totalPayment">Всего выплат: {totalPayment}</div>}
+      <Table outputData={outputData} />
     </>
   )
 }

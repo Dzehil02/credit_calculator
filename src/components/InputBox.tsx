@@ -1,4 +1,3 @@
-
 interface InputBoxProps {
     label: string
     placeholder: string
@@ -11,7 +10,7 @@ function InputBox({label, placeholder, inputName, changeInput}: InputBoxProps) {
     return (
       <div className="inputBox">
         <label className="label">{label}</label>
-        <input name={inputName} onChange={changeInput} type="number" placeholder={placeholder} />
+        <input name={inputName} onChange={changeInput} type="number" placeholder={placeholder} min={0} />
       </div>
     )
   }

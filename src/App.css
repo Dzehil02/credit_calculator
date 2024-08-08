@@ -65,3 +65,14 @@
 .table {
   width: 100%;
 }
+
+.totalPayment {
+  text-align: start;
+  font-weight: 700;
+  margin-top: 1em;
+}
+
+.validate {
+  color: red;
+  text-align: start;
+}
