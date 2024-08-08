@@ -40,3 +40,28 @@
 .read-the-docs {
   color: #888;
 }
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+}
+
+.label {
+  margin-bottom: 0.5em;
+}
+
+.output {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.table {
+  width: 100%;
+}
