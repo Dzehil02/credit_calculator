@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import './App.css';
 import {CreditInputData, CreditOutputData} from './types/types';
 import {calculateMonthlyPayment, calculateTotalPayment} from './utils/calculatePayment';
@@ -15,29 +15,32 @@ function App() {
 
     const [outputData, setOutputData] = useState<CreditOutputData[]>([]);
 
-    const [validate, setValidate] = useState<string | undefined>(undefined);
+    const [validationError, setValidationError] = useState<string | undefined>(undefined);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValidate(validateInputData(event));
+    const handleChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            setValidationError(validateInputData(event));
 
-        setInputData({
-            ...inputData,
-            [event.target.name]: +event.target.value,
-        });
-    };
+            setInputData({
+                ...inputData,
+                [event.target.name]: +event.target.value,
+            });
+        },
+        [inputData]
+    );
 
-    const handleCalculate = () => {
+    const handleCalculate = useCallback(() => {
         const results = calculateMonthlyPayment(inputData);
         setOutputData(results);
-    };
+    }, [inputData]);
 
-    const totalPayment = calculateTotalPayment(outputData);
+    const totalPayment = useMemo(() => calculateTotalPayment(outputData), [outputData]);
 
     return (
         <>
             <h1>Кредитный калькулятор</h1>
-            <Header validate={validate} handleChange={handleChange} handleCalculate={handleCalculate} />
-            {validate && <div className="validate">{validate}</div>}
+            <Header validationError={validationError} onChange={handleChange} onCalculate={handleCalculate} />
+            {validationError && <div className="validate">{validationError}</div>}
             {outputData.length > 0 && <div className="totalPayment">Всего выплат: {totalPayment}</div>}
             <Table outputData={outputData} />
         </>
